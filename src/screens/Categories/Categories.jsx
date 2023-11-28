@@ -3,42 +3,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, TextInput, Text, TouchableOpacity, FlatList } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import Fallback from '../../components/Fallback';
+import useLocalStorage from '../../utils/useLocalStorage';
 
-const Categories = () => {
+const Categories = ({route}) => {
+  const { onCategoryAdded, onCategoryUpdated,onCategoryDeleted } = route.params || {};
   const [addCat, setAddcat] = useState('');
-  const [List, setList] = useState([]);
   const [edited, setEdit] = useState(null);
-
+  
   // Load data from AsyncStorage when the component mounts
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const storedList = await AsyncStorage.getItem('categories');
-        if (storedList) {
-          setList(JSON.parse(storedList));
-        }
-      } catch (error) {
-        console.error('Error loading data from AsyncStorage:', error);
-      }
-    };
-
-    loadData();
-  }, []);
-
-  // Save data to AsyncStorage whenever List is updated
-  useEffect(() => {
-    const saveData = async () => {
-      try {
-        await AsyncStorage.setItem('categories', JSON.stringify(List));
-      } catch (error) {
-        console.error('Error saving data to AsyncStorage:', error);
-      }
-    };
-
-    saveData();
-  }, [List]);
+  const [List, setList] = useLocalStorage('categories', []);
+  
 
   //To add the categories.
   const handleAdd = () => {
@@ -46,14 +21,22 @@ const Categories = () => {
       alert('Add a category');
       return;
     }
-    setList([...List, { id: Date.now().toString(), title: addCat }]);
+    const newCategory = { id: Date.now().toString(), title: addCat };
+    setList([...List, newCategory]);
     setAddcat('');
+    if (onCategoryAdded) {
+      onCategoryAdded(newCategory);
+    }
   };
+
 
   //To delete the items
   const handleDelete = (id) => {
     const updatedList = List.filter((cat) => cat.id !== id);
     setList(updatedList);
+    if (onCategoryDeleted) {
+      onCategoryDeleted(id);
+    }
   };
 
   //Handling Edit feature.
@@ -66,7 +49,11 @@ const Categories = () => {
   const handleUpdated = () => {
     const updatedCat = List.map((item) => {
       if (item.id === edited.id) {
-        return { ...item, title: addCat };
+        const updatedCategory = { ...item, title: addCat };
+        if (onCategoryUpdated) {
+          onCategoryUpdated(updatedCategory);
+        }
+        return updatedCategory;
       }
       return item;
     });

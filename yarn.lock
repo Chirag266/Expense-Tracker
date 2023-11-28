@@ -5653,6 +5653,11 @@
   "resolved" "https://registry.npmjs.org/react-is/-/react-is-17.0.2.tgz"
   "version" "17.0.2"
 
+"react-native-image-picker@^7.0.3":
+  "integrity" "sha512-mFbu8AzZ8tysO7xHsQ+TmxYYJYaBCL66s4AujjgCBEAyTufm2nhjhVOw2uq1zvMDVtGoyekzCJfH3JqVmXK/3w=="
+  "resolved" "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.0.3.tgz"
+  "version" "7.0.3"
+
 "react-native-paper@^5.11.1":
   "integrity" "sha512-axqRTagGL8LtuYh172cx2Q2THOVJ3PTpPjCKhL5ECRdpJs2ceiboVecSiOIBuO3H7dVpaneptBA0vJr9HeVHwg=="
   "resolved" "https://registry.npmjs.org/react-native-paper/-/react-native-paper-5.11.1.tgz"

@@ -7,11 +7,13 @@ import { enableScreens } from 'react-native-screens';
 import Categories from './src/screens/Categories/Categories';
 import Addexpense from './src/screens/Add Expense/Addexpense';
 import { CategoryProvider, useCategoryContext } from './src/components/CategoryContext';
+import { TransactionProvider } from './src/context/TransactionContext';
 enableScreens(true);
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
+    <TransactionProvider>
    <NavigationContainer>
     <CategoryProvider>
    <Stack.Navigator initialRouteName="Login">
@@ -22,6 +24,7 @@ const App = () => {
    </Stack.Navigator>
    </CategoryProvider>
  </NavigationContainer>
+ </TransactionProvider>
   )
   }
 
