@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Text, View, Button, TextInput, FlatList, TouchableOpacity, StyleSheet, Platform, Alert, Image, ScrollView } from 'react-native';
+import { Text, View, TextInput, FlatList, TouchableOpacity, StyleSheet, Platform, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import useLocalStorage from '../../utils/useLocalStorage';
 import CustomButton from '../../components/CustomButton';
 import { useTransaction } from '../../context/TransactionContext';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import BottomSheet from '@gorhom/bottom-sheet';
 
+<BottomSheet></BottomSheet>
 const renderCategories = ({ item, index ,onPress}) => {
 
   return (
@@ -33,6 +35,7 @@ const Addexpense = ({ route }) => {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const { addTransaction } = useTransaction();
+  const [showCategory, setShowCategory] = useState(false);
   const navigation = useNavigation();
 
   const onChangeDate = (event, selected) => {
