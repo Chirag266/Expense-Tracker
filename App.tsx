@@ -15,14 +15,12 @@ const App = () => {
   return (
     <TransactionProvider>
    <NavigationContainer>
-    <CategoryProvider>
    <Stack.Navigator initialRouteName="Login">
      <Stack.Screen name="Login" component={LoginPage} />
      <Stack.Screen name="Home" component={Homepage} />
      <Stack.Screen name="Categories" component={Categories} />
      <Stack.Screen name="Addexpense" component={Addexpense} />
    </Stack.Navigator>
-   </CategoryProvider>
  </NavigationContainer>
  </TransactionProvider>
   )

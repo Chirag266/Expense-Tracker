@@ -1,12 +1,10 @@
 import React ,{useState,useEffect}from 'react'
-import { Text, View ,Button, TouchableOpacity} from 'react-native';
+import { Text, View ,Button, TouchableOpacity,StyleSheet,FlatList } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { enableScreens } from 'react-native-screens';
-import { StyleSheet } from 'react-native';
 import { useTransaction } from '../../context/TransactionContext';
-import { FlatList } from 'react-native';
 enableScreens(true);
 const Stack = createNativeStackNavigator();
 
@@ -59,8 +57,8 @@ const styles = StyleSheet.create({
     right: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 40,
-    marginBottom: 40,
+    marginRight: 25,
+    marginBottom: 100,
   },
   transactionItem: {
     margin: 10,

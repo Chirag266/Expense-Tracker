@@ -1,8 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useState ,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, TextInput, Text, TouchableOpacity, FlatList } from 'react-native';
 import { IconButton } from 'react-native-paper';
-import { useState } from 'react';
 import Fallback from '../../components/Fallback';
 import useLocalStorage from '../../utils/useLocalStorage';
 
@@ -62,6 +61,25 @@ const Categories = ({route}) => {
     setAddcat('');
   };
 
+  // const renderCategories = ({ item, index }) => {
+  //   return (
+  //     <View
+  //       style={{
+  //         margin: 3,
+  //         backgroundColor: 'blue',
+  //         borderRadius: 6,
+  //         alignItems: 'center',
+  //         flexDirection: 'row',
+  //       }}
+  //     >
+  //       <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, flex: 1 }}>
+  //         {item.title}{' '}
+  //       </Text>
+  //       <IconButton icon="pencil" iconColor="white" onPress={() => handleEdit(item)} />
+  //       <IconButton icon="trash-can" iconColor="white" onPress={() => handleDelete(item.id)} />
+  //     </View>
+  //   );
+  // };
   const renderCategories = ({ item, index }) => {
     return (
       <View
@@ -73,14 +91,33 @@ const Categories = ({route}) => {
           flexDirection: 'row',
         }}
       >
-        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, flex: 1 }}>
-          {item.title}{' '}
-        </Text>
-        <IconButton icon="pencil" iconColor="white" onPress={() => handleEdit(item)} />
-        <IconButton icon="trash-can" iconColor="white" onPress={() => handleDelete(item.id)} />
+        {edited && edited.id === item.id ? (
+          <TextInput
+            value={addCat}
+            onChangeText={(text) => setAddcat(text)}
+            onBlur={() => handleUpdated()}
+            autoFocus
+            style={{
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: 20,
+              flex: 1,
+              padding: 10,
+            }}
+          />
+        ) : (
+          <>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, flex: 1 }}>
+              {item.title}{' '}
+            </Text>
+            <IconButton icon="pencil" iconColor="white" onPress={() => handleEdit(item)} />
+            <IconButton icon="trash-can" iconColor="white" onPress={() => handleDelete(item.id)} />
+          </>
+        )}
       </View>
     );
   };
+  
 
   return (
     <View style={{ marginHorizontal: 16 }}>
