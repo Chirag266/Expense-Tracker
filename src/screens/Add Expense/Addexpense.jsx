@@ -16,7 +16,7 @@ const Addexpense = ({ route }) => {
   const [imgUrl, setimgUrl] = useState("https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=");
   const [note, setNote] = useState('');
   const { addTransaction, updateTransaction } = useTransaction();
-  const [categorry, setcategorry] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState(null);
   const [showCategory, setShowCategory] = useState(false);
   const navigation = useNavigation();
 
@@ -44,18 +44,18 @@ const Addexpense = ({ route }) => {
     setList(updatedList);
   };
 
-  const selectedCategory=()=>{
+  const setCategory=()=>{
     console.log("cate")
   }
 
   const openCameraLib=async()=>{
-    console.log("PResss")
+    console.log("Press")
     const result=await launchCamera();
     setimgUrl(result?.assets[0]?.uri);
     console.log("result",result);
   }
   const openLibrary=async()=>{
-    console.log("PResss")
+    console.log("Press")
     const result=await launchImageLibrary();
     setimgUrl(result?.assets[0]?.uri);
     console.log("result",result);
@@ -102,7 +102,7 @@ const Addexpense = ({ route }) => {
   const renderCategories = ({ item, index ,onPress}) => {
 
     return (
-      <TouchableOpacity onPress={selectedCategory} style={{
+      <TouchableOpacity onPress={setCategory} style={{
         margin: 5,
         backgroundColor:"#fff",
         borderRadius: 10,
@@ -222,6 +222,7 @@ const styles = StyleSheet.create({
     height:40,
     borderRadius:6,
     backgroundColor:'green',
+    margin:2
   },
   textBtn:{
     color:'#fff'

@@ -29,29 +29,36 @@ const Homepage = () => {
 
   const [currentMonthIndex, setCurrentMonthIndex] = useState(0);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
     const filteredData = transactions.filter((transaction) => {
-      if (currentMonthIndex === 0) {
+      if (currentMonthIndex === 0 && currentYear === 'All') {
         // Sare transactions dekhne k liye "All" option
         return true;
       }
       const transactionMonth = new Date(transaction.date).getMonth();
-      return transactionMonth === currentMonthIndex-1;
+      const transactionYear = new Date(transaction.date).getFullYear();
+      return (
+        (currentMonthIndex === 0 || transactionMonth === currentMonthIndex - 1) &&
+        (currentYear === 'All' || transactionYear === currentYear)
+      );
     });
     const totalAmountForMonth = filteredData.reduce((total, transaction) => total + transaction.amount, 0);
     
     setTotalAmount(totalAmountForMonth);
     setFilteredTransactions(filteredData);
-  }, [currentMonthIndex, transactions]);
+  }, [currentMonthIndex,currentYear, transactions]);
 
   const navigateToMonth = (step) => {
     setCurrentMonthIndex((prevIndex) => (prevIndex + step + 13) % 13);
   };
- 
+  const navigateToYear = (step) => {
+    setCurrentYear((prevYear) => (prevYear === 'All' ? 'All' : prevYear + step));
+  };
   return (
     <View style={{ flex: 1 }}>
-      <TouchableOpacity style={{backgroundColor:'blue',borderRadius:10,
+      <TouchableOpacity style={{backgroundColor:'#2E8B57',borderRadius:10,
         height: 30,flexDirection:'row',width:65,alignSelf:'flex-end',justifyContent:'center',margin:6}}>
           <Text style={{alignSelf:'center',fontWeight:'bold',fontSize:14}}>Sign Out</Text>
         </TouchableOpacity>
@@ -62,6 +69,13 @@ const Homepage = () => {
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{months[currentMonthIndex]}</Text>
         <TouchableOpacity onPress={() => navigateToMonth(1)}>
           <Text style={{fontWeight:'bold',fontSize:22}}>{'>'}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => navigateToYear(-1)}>
+          <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{'<<'}</Text>
+        </TouchableOpacity>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{currentYear}</Text>
+        <TouchableOpacity onPress={() => navigateToYear(1)}>
+          <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{'>>'}</Text>
         </TouchableOpacity>
       </View>
       <View style={{flexDirection:'row',
@@ -82,7 +96,7 @@ const Homepage = () => {
             <View>
             <Text style={{fontWeight:'bold',fontSize:14}}>{item.amount}</Text>
             {/* <Text>{item.date.toDateString()}</Text> */}
-            <TouchableOpacity style={{height:45,justifyContent:'center', marginLeft:12}} onPress={() => handleDelete(item.id)}>
+            <TouchableOpacity style={{height:40,justifyContent:'center', marginLeft:12}} onPress={() => handleDelete(item.id)}>
             <Image source={require("../../../assets/delete.png")}>
            </Image>
            </TouchableOpacity>
@@ -109,7 +123,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
     fontSize: 20,
-    backgroundColor: 'blue',
+    backgroundColor: '#2E8B57',
     position: 'absolute',
     bottom: 0,
     right: 0,
@@ -122,7 +136,7 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     borderWidth: 1,
-    borderColor: 'blue',
+    borderColor: '#2E8B57',
     borderRadius: 10,
     flexDirection:'row',
     justifyContent:'space-between'

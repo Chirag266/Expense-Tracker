@@ -84,7 +84,7 @@ const Categories = ({route}) => {
       <View
         style={{
           marginTop: 4,
-          backgroundColor: 'black',
+          backgroundColor: '#2E8B57',
           borderRadius: 6,
           alignItems: 'center',
           flexDirection: 'row',
@@ -145,7 +145,7 @@ const Categories = ({route}) => {
         <TouchableOpacity
           onPress={() => handleUpdated()}
           style={{
-            backgroundColor: 'black',
+            backgroundColor: '#2E8B57',
             borderRadius: 6,
             paddingVertical: 12,
             marginTop: 15,
@@ -158,7 +158,7 @@ const Categories = ({route}) => {
         <TouchableOpacity
           onPress={() => handleAdd()}
           style={{
-            backgroundColor: 'black',
+            backgroundColor: '#2E8B57',
             borderRadius: 6,
             paddingVertical: 12,
             marginTop: 15,
