@@ -6,7 +6,6 @@ import Homepage from './src/screens/HomePage/Homepage';
 import { enableScreens } from 'react-native-screens';
 import Categories from './src/screens/Categories/Categories';
 import Addexpense from './src/screens/Add Expense/Addexpense';
-import { CategoryProvider, useCategoryContext } from './src/components/CategoryContext';
 import { TransactionProvider } from './src/context/TransactionContext';
 enableScreens(true);
 const Stack = createNativeStackNavigator();
@@ -17,7 +16,7 @@ const App = () => {
    <NavigationContainer>
    <Stack.Navigator initialRouteName="Login">
      <Stack.Screen name="Login" component={LoginPage} />
-     <Stack.Screen name="Home" component={Homepage} />
+     <Stack.Screen name="Home" component={Homepage} />     
      <Stack.Screen name="Categories" component={Categories} />
      <Stack.Screen name="Addexpense" component={Addexpense} />
    </Stack.Navigator>

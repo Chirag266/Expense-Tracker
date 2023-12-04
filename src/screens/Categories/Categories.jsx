@@ -1,7 +1,6 @@
 import React, { useState ,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, TextInput, Text, TouchableOpacity, FlatList } from 'react-native';
-import { IconButton } from 'react-native-paper';
+import { View, TextInput, Text, TouchableOpacity, FlatList ,Image} from 'react-native';
 import Fallback from '../../components/Fallback';
 import useLocalStorage from '../../utils/useLocalStorage';
 
@@ -84,8 +83,8 @@ const Categories = ({route}) => {
     return (
       <View
         style={{
-          margin: 3,
-          backgroundColor: 'blue',
+          marginTop: 4,
+          backgroundColor: 'black',
           borderRadius: 6,
           alignItems: 'center',
           flexDirection: 'row',
@@ -107,11 +106,17 @@ const Categories = ({route}) => {
           />
         ) : (
           <>
-            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, flex: 1 }}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 20, flex: 1 ,margin: 10}}>
               {item.title}{' '}
             </Text>
-            <IconButton icon="pencil" iconColor="white" onPress={() => handleEdit(item)} />
-            <IconButton icon="trash-can" iconColor="white" onPress={() => handleDelete(item.id)} />
+            <TouchableOpacity style={{height:45,justifyContent:'center'}} onPress={() => handleEdit(item)}>
+            <Image source={require("../../../assets/edit.png")}>
+           </Image>
+           </TouchableOpacity>
+           <TouchableOpacity style={{height:45,justifyContent:'center', marginLeft:12}} onPress={() => handleDelete(item.id)}>
+            <Image source={require("../../../assets/delete.png")}>
+           </Image>
+           </TouchableOpacity>
           </>
         )}
       </View>

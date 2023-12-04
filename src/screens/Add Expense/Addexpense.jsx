@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import { Text, View, TextInput, FlatList, TouchableOpacity, StyleSheet, Platform, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -6,27 +6,6 @@ import useLocalStorage from '../../utils/useLocalStorage';
 import CustomButton from '../../components/CustomButton';
 import { useTransaction } from '../../context/TransactionContext';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import BottomSheet from '@gorhom/bottom-sheet';
-
-<BottomSheet></BottomSheet>
-const renderCategories = ({ item, index ,onPress}) => {
-
-  return (
-    <TouchableOpacity style={{
-      margin: 5,
-      backgroundColor:"#fff",
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor:"blue",
-      padding: 10,
-      flexDirection: 'row',
-    }}>
-      <Text style={{color: "black", fontSize: 17, flex: 1, justifyContent: 'space-evenly' }}>
-        {item.title}
-      </Text>
-    </TouchableOpacity>
-  );
-};
 
 const Addexpense = ({ route }) => {
   const [name, setName] = useState('');
@@ -34,12 +13,16 @@ const Addexpense = ({ route }) => {
   const [List, setList] = useLocalStorage('categories', []);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const { addTransaction } = useTransaction();
+  const [imgUrl, setimgUrl] = useState("https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=");
+  const [note, setNote] = useState('');
+  const { addTransaction, updateTransaction } = useTransaction();
+  const [categorry, setcategorry] = useState('')
   const [showCategory, setShowCategory] = useState(false);
   const navigation = useNavigation();
 
   const onChangeDate = (event, selected) => {
     const currentDate = selected || selectedDate;
+    console.log(typeof(selectedDate));
     setShowDatePicker(Platform.OS === 'ios');
     setSelectedDate(currentDate);
   };
@@ -62,9 +45,9 @@ const Addexpense = ({ route }) => {
   };
 
   const selectedCategory=()=>{
-    
+    console.log("cate")
   }
-  const [imgUrl, setimgUrl] = useState("https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=");
+
   const openCameraLib=async()=>{
     console.log("PResss")
     const result=await launchCamera();
@@ -77,7 +60,19 @@ const Addexpense = ({ route }) => {
     setimgUrl(result?.assets[0]?.uri);
     console.log("result",result);
   }
-  
+  const transaction = route.params?.transaction;
+
+  useEffect(() => {
+    if (transaction) {
+      setName(transaction.name);
+      setAmount(transaction.amount.toString());
+      setSelectedDate(new Date(transaction.date));
+      setNote(transaction.note);
+      setimgUrl(transaction.imgUrl);
+      // Category is left to add
+    }
+  }, [transaction]);
+
   const saveTransaction = () => {
     if(name==='') {
       alert("enter the name")
@@ -87,17 +82,42 @@ const Addexpense = ({ route }) => {
       alert("enter the amonut");
       return;
     }
-    const newTransaction = {
-      id: Date.now().toString(),
+   const newTransaction = {
+      id: transaction ? transaction.id : Date.now().toString(),
       name,
       amount: parseFloat(amount),
       date: selectedDate,
-      // category is left we can add more things too
+      imgUrl,
+      note,
+      // Add other fields as needed
     };
+    if (transaction) {
+      updateTransaction(newTransaction);
+    } else{
+      addTransaction(newTransaction);
+    }
 
-    addTransaction(newTransaction);
-    navigation.navigate('Home');
+    navigation.goBack();
   };
+  const renderCategories = ({ item, index ,onPress}) => {
+
+    return (
+      <TouchableOpacity onPress={selectedCategory} style={{
+        margin: 5,
+        backgroundColor:"#fff",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor:"blue",
+        padding: 10,
+        flexDirection: 'row',
+      }}>
+        <Text style={{color: "black", fontWeight:'bold', fontSize: 17, flex: 1, justifyContent: 'space-evenly' }}>
+          {item.title}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+  
   // useEffect(() => {
   //   const loadData = async () => {
   //     try {
@@ -124,6 +144,7 @@ const Addexpense = ({ route }) => {
 
   //   saveData();
   // }, [List]);
+  console.log(selectedDate);
   return (
     <ScrollView>
     <View>
@@ -171,7 +192,7 @@ const Addexpense = ({ route }) => {
       </TouchableOpacity>
       </View>
       <Text style={styles.text}>Note</Text>
-      <TextInput placeholder='Note(Optional)' style={styles.input} />
+      <TextInput value={note} placeholder='Note(Optional)'onChangeText={(text)=>setNote(text)} style={styles.input} />
         <TouchableOpacity onPress={saveTransaction} style={{margin:20,borderRadius:16,backgroundColor:"black",paddingVertical:7,marginBottom:90}}>
           <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: "#FFF"}}>
             Save
