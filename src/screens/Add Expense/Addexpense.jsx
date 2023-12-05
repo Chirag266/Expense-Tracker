@@ -1,23 +1,22 @@
 import React, { useState ,useEffect} from 'react';
-import { Text, View, TextInput, FlatList, TouchableOpacity, StyleSheet, Platform, Image, ScrollView } from 'react-native';
+import { Text, View, TextInput, FlatList, TouchableOpacity,KeyboardAvoidingView, StyleSheet, Platform, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import useLocalStorage from '../../utils/useLocalStorage';
 import CustomButton from '../../components/CustomButton';
 import { useTransaction } from '../../context/TransactionContext';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const Addexpense = ({ route }) => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
   const [List, setList] = useLocalStorage('categories', []);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [imgUrl, setimgUrl] = useState("https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8=");
+  const [imgUrl, setimgUrl] = useState(null);
   const [note, setNote] = useState('');
   const { addTransaction, updateTransaction } = useTransaction();
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [showCategory, setShowCategory] = useState(false);
   const navigation = useNavigation();
 
   const onChangeDate = (event, selected) => {
@@ -44,28 +43,31 @@ const Addexpense = ({ route }) => {
     setList(updatedList);
   };
 
-  const setCategory=()=>{
-    console.log("cate")
-  }
+  const setCategory = (item) => {
+    setSelectedCategory(item.title);
+    console.log('Selected category:',item.title);
+  };
 
   const openCameraLib=async()=>{
     console.log("Press")
-    const result=await launchCamera();
-    setimgUrl(result?.assets[0]?.uri);
+    const result=await launchCamera({includeBase64:true});
+    setimgUrl(result?.assets[0]?.base64);
     console.log("result",result);
   }
   const openLibrary=async()=>{
     console.log("Press")
-    const result=await launchImageLibrary();
-    setimgUrl(result?.assets[0]?.uri);
+    const result=await launchImageLibrary({includeBase64:true});
+    setimgUrl(result?.assets[0]?.base64);
     console.log("result",result);
   }
+  const encodedBase64 = imgUrl;
   const transaction = route.params?.transaction;
 
   useEffect(() => {
     if (transaction) {
       setName(transaction.name);
       setAmount(transaction.amount.toString());
+      setSelectedCategory(transaction.selectedCategory)
       setSelectedDate(new Date(transaction.date));
       setNote(transaction.note);
       setimgUrl(transaction.imgUrl);
@@ -82,10 +84,15 @@ const Addexpense = ({ route }) => {
       alert("enter the amonut");
       return;
     }
+    if(selectedCategory===null){
+      alert("enter the category");
+      return;
+    }
    const newTransaction = {
       id: transaction ? transaction.id : Date.now().toString(),
       name,
       amount: parseFloat(amount),
+      selectedCategory,
       date: selectedDate,
       imgUrl,
       note,
@@ -102,16 +109,19 @@ const Addexpense = ({ route }) => {
   const renderCategories = ({ item, index ,onPress}) => {
 
     return (
-      <TouchableOpacity onPress={setCategory} style={{
-        margin: 5,
-        backgroundColor:"#fff",
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor:"blue",
-        padding: 10,
-        flexDirection: 'row',
-      }}>
-        <Text style={{color: "black", fontWeight:'bold', fontSize: 17, flex: 1, justifyContent: 'space-evenly' }}>
+      <TouchableOpacity
+        onPress={() => setCategory(item)}
+        style={{
+          margin: 5,
+          backgroundColor: selectedCategory === item.title ? 'green' : '#fff',
+          borderRadius: 10,
+          borderWidth: 1,
+          borderColor: 'blue',
+          padding: 10,
+          flexDirection: 'row',
+        }}
+      >
+        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 17, flex: 1, justifyContent: 'space-evenly' }}>
           {item.title}
         </Text>
       </TouchableOpacity>
@@ -146,19 +156,21 @@ const Addexpense = ({ route }) => {
   // }, [List]);
   console.log(selectedDate);
   return (
-    <ScrollView>
-    <View>
+    <SafeAreaView style={{ flex: 1 }}>
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ScrollView>
+        <View style={{ flex: 1 }}>
       <Text style={styles.text}>Name</Text>
       <TextInput placeholder='Name of Expense' value={name} onChangeText={(text)=>setName(text)} style={ styles.input } />
         <TextInput style={styles.input} value={amount} onChangeText={(text)=>setAmount(text)} keyboardType='numeric' placeholder='Enter Amount:' />
       <Text style={styles.text}>Categories</Text>
       <FlatList
         data={List}
-        onPress={selectedCategory}
         renderItem={renderCategories}
         horizontal={true}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingVertical: 10 }}
+        showsHorizontalScrollIndicator={false}
       />
       <CustomButton title='+ Category' color='grey' onPress={() =>
             navigation.navigate('Categories', {
@@ -183,7 +195,8 @@ const Addexpense = ({ route }) => {
       {/* <Text style={styles.text}>Picture(Optional):</Text> */}
       <Text style={styles.text}>Camera</Text>
       <View>
-        <Image resizeMode='contain' style={styles.img} source={{uri:imgUrl}}></Image>
+        
+        {imgUrl ? <Image resizeMode='contain' style={styles.img} source={{uri: `data:image/png;base64,${encodedBase64}`}} /> : null}
       <TouchableOpacity style={styles.btnCam} onPress={openCameraLib}>
         <Text style={styles.textBtn}>Open Camera</Text>
       </TouchableOpacity>
@@ -198,8 +211,10 @@ const Addexpense = ({ route }) => {
             Save
           </Text>
         </TouchableOpacity>
-    </View>
-    </ScrollView>
+        </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({
@@ -210,8 +225,8 @@ const styles = StyleSheet.create({
     color: "black", fontSize: 22, fontWeight:'bold', margin:5
   },
   img:{
-    width:'50%',
-    height:150,
+    width:250,
+    height:200,
     alignSelf:'center'
   },
   btnCam:{

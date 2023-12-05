@@ -38,3 +38,10 @@
 //   }
 //   return context;
 // };
+
+
+ {/* <ScrollView>
+        {List.map((item)=> 
+          renderCategories(item)
+        )}
+        </ScrollView> */}

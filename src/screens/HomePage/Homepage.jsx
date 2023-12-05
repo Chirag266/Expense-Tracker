@@ -57,25 +57,25 @@ const Homepage = () => {
     setCurrentYear((prevYear) => (prevYear === 'All' ? 'All' : prevYear + step));
   };
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1,paddingBottom:100}}>
       <TouchableOpacity style={{backgroundColor:'#2E8B57',borderRadius:10,
-        height: 30,flexDirection:'row',width:65,alignSelf:'flex-end',justifyContent:'center',margin:6}}>
-          <Text style={{alignSelf:'center',fontWeight:'bold',fontSize:14}}>Sign Out</Text>
+        height: 30,flexDirection:'row',width:75,alignSelf:'flex-end',justifyContent:'center',margin:6}}>
+          <Text style={{alignSelf:'center',fontWeight:'bold',fontSize:16,color:"white"}}>Sign Out</Text>
         </TouchableOpacity>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
         <TouchableOpacity onPress={() => navigateToMonth(-1)}>
-          <Text style={{fontWeight:'bold',fontSize:22}}>{'<'}</Text>
+          <Text style={{fontWeight:'bold',fontSize:22,marginLeft: 12}}>{'<'}</Text>
         </TouchableOpacity>
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{months[currentMonthIndex]}</Text>
         <TouchableOpacity onPress={() => navigateToMonth(1)}>
           <Text style={{fontWeight:'bold',fontSize:22}}>{'>'}</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigateToYear(-1)}>
-          <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{'<<'}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 22}}>{'<<'}</Text>
         </TouchableOpacity>
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{currentYear}</Text>
         <TouchableOpacity onPress={() => navigateToYear(1)}>
-          <Text style={{ fontWeight: 'bold', fontSize: 22 }}>{'>>'}</Text>
+          <Text style={{ fontWeight: 'bold', fontSize: 22, marginRight: 12 }}>{'>>'}</Text>
         </TouchableOpacity>
       </View>
       <View style={{flexDirection:'row',
@@ -83,14 +83,15 @@ const Homepage = () => {
       <Text style={{fontSize:20,fontWeight:'bold'}}>Total Amount:</Text>
       <Text style={{fontSize:20,fontWeight:'bold'}}>Rs:{totalAmount}</Text>
       </View>
-      <FlatList
+      <FlatList style={{flex:1}}
         data={filteredTransactions}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={()=> handleExpenseEdit(item)}>
           <View style={styles.transactionItem}>
             <View>
-            <Text style={{fontWeight:'bold',fontSize:14}}>{item.name}</Text>
-            <Text style={{fontWeight:'bold',fontSize:14}}>{new Date(item.date).toDateString()}</Text>
+            <Text style={{fontWeight:'bold',fontSize:15}}>{item.name}</Text>
+            <Text style={{fontWeight:'bold',fontSize:15}}>{item.selectedCategory}</Text>
+            <Text style={{fontWeight:'bold',fontSize:15}}>{new Date(item.date).toDateString()}</Text>
             {/* Category Add baki */}
             </View>
             <View>
@@ -110,7 +111,7 @@ const Homepage = () => {
         style={styles.addButton}
         onPress={() => navigation.navigate('Addexpense')}
       >
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>+</Text>
+        <Text style={{ fontSize: 40,color:"#fff", lineHeight: 50 }}>+</Text>
       </TouchableOpacity>
     </View>
   );

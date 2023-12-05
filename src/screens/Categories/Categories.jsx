@@ -1,6 +1,6 @@
 import React, { useState ,useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View, TextInput, Text, TouchableOpacity, FlatList ,Image} from 'react-native';
+import { View, TextInput, Text, TouchableOpacity, ScrollView,FlatList ,Image} from 'react-native';
 import Fallback from '../../components/Fallback';
 import useLocalStorage from '../../utils/useLocalStorage';
 
@@ -125,8 +125,9 @@ const Categories = ({route}) => {
   
 
   return (
-    <View style={{ marginHorizontal: 16 }}>
-      <SafeAreaView>
+    <SafeAreaView style={{flex:1,paddingBottom:80}}> 
+    <View style={{flex:1, marginHorizontal: 16 }}>
+     
         <TextInput
           placeholder="Add Category"
           value={addCat}
@@ -140,7 +141,7 @@ const Categories = ({route}) => {
             fontSize: 20,
           }}
         />
-      </SafeAreaView>
+      
       {edited ? (
         <TouchableOpacity
           onPress={() => handleUpdated()}
@@ -169,8 +170,14 @@ const Categories = ({route}) => {
         </TouchableOpacity>
       )}
       <FlatList data={List} renderItem={renderCategories} />
+       {/* <ScrollView>
+        {List.map((item)=> 
+          renderCategories({item})
+        )}
+        </ScrollView> */}
       {List.length <= 0 && <Fallback />}
     </View>
+    </SafeAreaView>
   );
 };
 
