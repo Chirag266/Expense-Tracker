@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from 'react';
+import React, { useState ,useEffect, useRef, useCallback} from 'react';
 import { Text, View, TextInput, FlatList, TouchableOpacity,KeyboardAvoidingView, StyleSheet, Platform, Image, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -7,6 +7,7 @@ import CustomButton from '../../components/CustomButton';
 import { useTransaction } from '../../context/TransactionContext';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Sheet from '../bottomSheet/Bottom';
 const Addexpense = ({ route }) => {
   const [name, setName] = useState('');
   const [amount, setAmount] = useState('');
@@ -18,6 +19,7 @@ const Addexpense = ({ route }) => {
   const { addTransaction, updateTransaction } = useTransaction();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const navigation = useNavigation();
+  const bottomSheetModalRef = useRef(null)
 
   const onChangeDate = (event, selected) => {
     const currentDate = selected || selectedDate;
@@ -116,12 +118,12 @@ const Addexpense = ({ route }) => {
           backgroundColor: selectedCategory === item.title ? 'green' : '#fff',
           borderRadius: 10,
           borderWidth: 1,
-          borderColor: 'blue',
+          borderColor: 'green',
           padding: 10,
           flexDirection: 'row',
         }}
       >
-        <Text style={{ color: 'black', fontWeight: 'bold', fontSize: 17, flex: 1, justifyContent: 'space-evenly' }}>
+        <Text style={{ color: selectedCategory === item.title ? 'white' : 'black', fontWeight: 'bold', fontSize: 17, flex: 1, justifyContent: 'space-evenly' }}>
           {item.title}
         </Text>
       </TouchableOpacity>
@@ -155,7 +157,16 @@ const Addexpense = ({ route }) => {
   //   saveData();
   // }, [List]);
   console.log(selectedDate);
+
+  console.log(List);
+  
+    // callbacks
+    const handlePresentModalPress = useCallback(() => {
+      bottomSheetModalRef.current?.present();
+    }, []);
+
   return (
+    <Sheet ref={bottomSheetModalRef} handleCategoryAdded={handleCategoryAdded} handleCategoryUpdated={handleCategoryUpdated} handleCategoryDeleted={handleCategoryDeleted} >
     <SafeAreaView style={{ flex: 1 }}>
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <ScrollView>
@@ -172,12 +183,8 @@ const Addexpense = ({ route }) => {
         contentContainerStyle={{ paddingVertical: 10 }}
         showsHorizontalScrollIndicator={false}
       />
-      <CustomButton title='+ Category' color='grey' onPress={() =>
-            navigation.navigate('Categories', {
-              onCategoryAdded: handleCategoryAdded,
-              onCategoryUpdated: handleCategoryUpdated,
-              onCategoryDeleted:handleCategoryDeleted
-            })
+      <CustomButton title='+ Category' color='grey' onPress={
+            handlePresentModalPress
           }  />
       <Text style={styles.text}>Date</Text>
       <TouchableOpacity onPress={() => setShowDatePicker(true)}>
@@ -215,6 +222,7 @@ const Addexpense = ({ route }) => {
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
+    </Sheet>
   );
 };
 const styles = StyleSheet.create({

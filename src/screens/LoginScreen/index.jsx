@@ -13,8 +13,11 @@ const LoginPage = ({ navigation }) => {
     <View>
       <Text style={{ fontSize: 30, textAlign: 'center', marginBottom:20  }}>Expense Tracker</Text>
         <CustomButton title="Login" color={'#2E8B57'} onPress={() => navigation.navigate('Home')}/>
+        {/* <View style={{marginTop:20}}>
+        <CustomButton title="SignUp with Google" onPress={() => navigation.navigate('Gottom')} color={'#2E8B57'}  />
+        </View> */}
         <View style={{marginTop:20}}>
-        <CustomButton title="SignUp with Google" onPress={() => navigation.navigate('Bottom')} color={'#2E8B57'}  />
+        <CustomButton title="SignUp with Google" onPress={() =>{}} color={'#2E8B57'}  />
         </View>
     </View>
     </View>
