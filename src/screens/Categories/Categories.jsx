@@ -129,6 +129,7 @@ const Categories = ({route}) => {
     <View style={{flex:1, marginHorizontal: 16 }}>
      
         <TextInput
+        placeholderTextColor="grey"
           placeholder="Add Category"
           value={addCat}
           onChangeText={(text) => setAddcat(text)}

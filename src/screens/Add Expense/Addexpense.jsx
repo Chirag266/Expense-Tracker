@@ -62,6 +62,9 @@ const Addexpense = ({ route }) => {
     setimgUrl(result?.assets[0]?.base64);
     console.log("result",result);
   }
+  const removeImage = () => {
+    setimgUrl(null);
+  };
   const encodedBase64 = imgUrl;
   const transaction = route.params?.transaction;
 
@@ -172,8 +175,8 @@ const Addexpense = ({ route }) => {
       <ScrollView>
         <View style={{ flex: 1 }}>
       <Text style={styles.text}>Name</Text>
-      <TextInput placeholder='Name of Expense' value={name} onChangeText={(text)=>setName(text)} style={ styles.input } />
-        <TextInput style={styles.input} value={amount} onChangeText={(text)=>setAmount(text)} keyboardType='numeric' placeholder='Enter Amount:' />
+      <TextInput placeholderTextColor="grey" placeholder='Name of Expense' value={name} onChangeText={(text)=>setName(text)} style={ styles.input } />
+        <TextInput style={styles.input} value={amount} onChangeText={(text)=>setAmount(text)} keyboardType='numeric' placeholderTextColor="grey" placeholder='Enter Amount:' />
       <Text style={styles.text}>Categories</Text>
       <FlatList
         data={List}
@@ -201,18 +204,23 @@ const Addexpense = ({ route }) => {
       )}
       {/* <Text style={styles.text}>Picture(Optional):</Text> */}
       <Text style={styles.text}>Camera</Text>
-      <View>
-        
-        {imgUrl ? <Image resizeMode='contain' style={styles.img} source={{uri: `data:image/png;base64,${encodedBase64}`}} /> : null}
+      <View> 
+        {imgUrl ? <View> 
+        <Image resizeMode='contain' style={styles.img} source={{uri: `data:image/png;base64,${encodedBase64}`}} /> 
+        <TouchableOpacity style={{position:'absolute',right:104,justifyContent:'center',alignItems:'center',
+        width:24,height:24,borderRadius:10,backgroundColor:'red',margin:2}} onPress={removeImage}>
+        <Text style={styles.textBtn}>x</Text>
+      </TouchableOpacity></View> : null}
       <TouchableOpacity style={styles.btnCam} onPress={openCameraLib}>
         <Text style={styles.textBtn}>Open Camera</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.btnCam} onPress={openLibrary}>
         <Text style={styles.textBtn}>Open Gallery</Text>
       </TouchableOpacity>
+     
       </View>
       <Text style={styles.text}>Note</Text>
-      <TextInput value={note} placeholder='Note(Optional)'onChangeText={(text)=>setNote(text)} style={styles.input} />
+      <TextInput value={note} placeholderTextColor="grey" placeholder='Note(Optional)'onChangeText={(text)=>setNote(text)} style={styles.input} />
         <TouchableOpacity onPress={saveTransaction} style={{margin:20,borderRadius:16,backgroundColor:"black",paddingVertical:7,marginBottom:90}}>
           <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: "#FFF"}}>
             Save
@@ -227,10 +235,11 @@ const Addexpense = ({ route }) => {
 };
 const styles = StyleSheet.create({
   input:{
-    fontSize: 22, backgroundColor: "white", borderRadius: 6, borderWidth: 0.5, margin:12
+    fontSize: 14, backgroundColor: "white", borderRadius: 6, borderWidth: 0.5, margin:12,
+    
   },  
   text:{
-    color: "black", fontSize: 22, fontWeight:'bold', margin:5
+    color: "black", fontSize: 20, fontWeight:'bold', margin:5
   },
   img:{
     width:250,

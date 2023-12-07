@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:404247399370:android:f4d8615365c2e50fc89d33",
+        "mobilesdk_app_id": "1:404247399370:android:4361842cb401fd94c89d33",
         "android_client_info": {
-          "package_name": "com.newapp"
+          "package_name": "com.tickmanager"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "404247399370-d3siue6lb0tt8g04628o740md59u1qgg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tickmanager",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "404247399370-l7ln5ha9lh9i9d7os4p2me8s90890bqn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCmFmtXNzdnHls1j422mdp5F3cwWvAG-JQ"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "404247399370-l7ln5ha9lh9i9d7os4p2me8s90890bqn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

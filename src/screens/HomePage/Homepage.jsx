@@ -5,14 +5,17 @@ import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { enableScreens } from 'react-native-screens';
 import { useTransaction } from '../../context/TransactionContext';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 enableScreens(true);
 const Stack = createNativeStackNavigator();
 
-const Homepage = () => {
+const Homepage = ({ route }) => {
   const { transactions, getTotalAmount ,handleDelete} = useTransaction();
   console.log(transactions);
   const [totalAmount, setTotalAmount] = useState(0);
+  const { userInfo } = route.params;
 
   useEffect(() => {
     setTotalAmount(getTotalAmount());
@@ -56,12 +59,26 @@ const Homepage = () => {
   const navigateToYear = (step) => {
     setCurrentYear((prevYear) => (prevYear === 'All' ? 'All' : prevYear + step));
   };
+  const signOut = async () => {
+    try {
+      await AsyncStorage.clear();
+      await GoogleSignin.signOut();
+      // setuserInfo(null);
+      navigation.navigate("Login");
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <View style={{ flex: 1,paddingBottom:100}}>
-      <TouchableOpacity style={{backgroundColor:'#2E8B57',borderRadius:10,
-        height: 30,flexDirection:'row',width:75,alignSelf:'flex-end',justifyContent:'center',margin:6}}>
+      <View style={{flexDirection:'row',justifyContent:'space-between'}}>
+        <Text style={{margin:10,fontSize:16}}>{userInfo.name}</Text>
+      <TouchableOpacity  onPress={() =>{signOut()}} style={{backgroundColor:'#2E8B57',borderRadius:10,
+        height: 30,flexDirection:'row',width:75,justifyContent:'center',margin:6}}>
           <Text style={{alignSelf:'center',fontWeight:'bold',fontSize:16,color:"white"}}>Sign Out</Text>
         </TouchableOpacity>
+        </View>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 10 }}>
         <TouchableOpacity onPress={() => navigateToMonth(-1)}>
           <Text style={{fontWeight:'bold',fontSize:22,marginLeft: 12}}>{'<'}</Text>
@@ -94,10 +111,10 @@ const Homepage = () => {
             <Text style={{fontWeight:'bold',fontSize:15}}>{new Date(item.date).toDateString()}</Text>
             {/* Category Add baki */}
             </View>
-            <View>
+            <View style={{ alignItems: 'center' }}>
             <Text style={{fontWeight:'bold',fontSize:14}}>{item.amount}</Text>
             {/* <Text>{item.date.toDateString()}</Text> */}
-            <TouchableOpacity style={{height:40,justifyContent:'center', marginLeft:12}} onPress={() => handleDelete(item.id)}>
+            <TouchableOpacity style={{height:40,justifyContent:'center',paddingTop:2}} onPress={() => handleDelete(item.id)}>
             <Image source={require("../../../assets/delete.png")}>
            </Image>
            </TouchableOpacity>

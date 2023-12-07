@@ -12,7 +12,7 @@ const Sheet = React.forwardRef(({children, handleCategoryAdded, handleCategoryUp
   // const [List, setList] = useLocalStorage('categories', []);
 
   // variables
-  const snapPoints = useMemo(() => ['40%', '70%'], []);
+  const snapPoints = useMemo(() => ['40%','60%', '80%'], []);
 
 
   const handleSheetChanges = useCallback((index) => {
